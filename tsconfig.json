@@ -1,8 +1,14 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "es2019",
-    "esModuleInterop": true,
-    "skipLibCheck": true
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "types": ["node"]
   }
+  // "compilerOptions": {
+  //   "module": "commonjs",
+  //   "target": "es2019",
+  //   "esModuleInterop": true,
+  //   "skipLibCheck": true
+  // }
 }

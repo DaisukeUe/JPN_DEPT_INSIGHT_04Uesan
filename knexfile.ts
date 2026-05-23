@@ -1,14 +1,12 @@
-// Update with your config settings.
-require("dotenv").config();
-/**
- * @type { Object.<string, import("knex").Knex.Config> }
- */
-module.exports = {
+import type { Knex } from "knex";
+import "dotenv/config";
+
+const config: Record<string, Knex.Config> = {
   development: {
     client: "pg",
     connection: {
-      user: process.env.USER,
-      database: process.env.DB,
+      user: "user",
+      database: "dept",
       host: "localhost",
     },
     migrations: {
@@ -24,6 +22,10 @@ module.exports = {
     migrations: {
       directory: "./db/data/migrations",
     },
-    seeds: { directory: "./db/data/seeds" },
+    seeds: {
+      directory: "./db/data/seeds",
+    },
   },
 };
+
+export default config;
