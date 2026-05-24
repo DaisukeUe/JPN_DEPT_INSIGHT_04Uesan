@@ -15,7 +15,7 @@
     "migrate-latest": "npx knex migrate:latest --knexfile ./knexfile.ts",
     "migrate-down": "npx knex migrate:down --knexfile /knexfile.ts",
     "seed-data": "npx knex seed:run --knexfile ./knexfile.ts",
-    "db:reset": "knex migrate:rollback --all && knex migrate:latest && knex seed:run"
+    "db:reset": "knex migrate:rollback --all && npx knex migrate:latest && npx knex seed:run"
   },
   "keywords": [],
   "author": "",

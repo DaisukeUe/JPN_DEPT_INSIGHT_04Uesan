@@ -9,7 +9,8 @@ export async function seed(knex: Knex): Promise<void> {
     {
       dept_id: 1,
       user_foreign_id: 1,
-      kinds: "y2",
+      favorite: "テスト１",
+      kinds: "2yjpy.b",
       sspan: 20231128,
       fspan: 20260522,
       showmode: "d",
@@ -17,7 +18,8 @@ export async function seed(knex: Knex): Promise<void> {
     {
       dept_id: 2,
       user_foreign_id: 2,
-      kinds: "y5",
+      favorite: "テスト２",
+      kinds: "5yjpy.b",
       sspan: 20221128,
       fspan: 20250522,
       showmode: "w",
@@ -25,7 +27,8 @@ export async function seed(knex: Knex): Promise<void> {
     {
       dept_id: 3,
       user_foreign_id: 1,
-      kinds: "y10",
+      favorite: "テスト３",
+      kinds: "10yjpy.b",
       sspan: 20221128,
       fspan: 20250522,
       showmode: "w",

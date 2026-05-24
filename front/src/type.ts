@@ -19,9 +19,14 @@ export interface SHOWDE_SAVE {
   show_save: {
     dept_id: number | null;
     user_foreign_id: number | null;
+    favorite: string;
     kinds: string;
     sspan: number;
     fspan: number;
     showmode: string;
   };
+}
+
+export interface DATA {
+  data: DAILY_POINT;
 }

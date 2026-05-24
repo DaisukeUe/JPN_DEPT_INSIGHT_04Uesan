@@ -13,6 +13,7 @@ exports.up = function (knex) {
     table.string("kinds", 64);
     table.decimal("dept_value", 3, 2);
     table.decimal("move_value", 3, 2);
+    table.string("favorite", 24);
   });
 };
 

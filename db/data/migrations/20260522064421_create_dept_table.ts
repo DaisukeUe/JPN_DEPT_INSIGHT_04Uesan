@@ -8,6 +8,7 @@ export async function up(knex: Knex): Promise<void> {
       .notNullable()
       .references("users.user_id")
       .onDelete("CASCADE");
+    table.string("favorite", 24);
     table.string("kinds", 64);
     table.integer("sspan", 16);
     table.integer("fspan", 16);

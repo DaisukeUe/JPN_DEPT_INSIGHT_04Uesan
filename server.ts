@@ -8,13 +8,13 @@ import type { DAILY_ROW } from "./type_backend";
 
 const PORT = 3000;
 const app = express();
-const { usersView, deptValue } = viewsFunction();
-
+const { usersView, deptValue, upDateDeptValue } = viewsFunction();
+app.use(cors());
+app.use(express.json());
 app.use(express.static(path.join(__dirname, "/public")));
 app.listen(PORT, () => {
   console.log(`server running on PORT ${PORT}`);
 });
-app.use(cors());
 
 async function fetchDaily(
   sSpan: number,
@@ -25,7 +25,6 @@ async function fetchDaily(
   const url = `https://stooq.com/q/d/l/?s=${kinds}&f=${sSpan}&t=${fSpan}&i=${showMode}&apikey=udu8gyS2pTVcXsD9U1ONl3jtFJbvahfC`;
   const res = await axios.get(url);
   const json = await csv().fromString(res.data);
-  console.log("URLLLLLL", json);
   return json;
 }
 //stooq.com/q/d/l/?s=2yjpy.b&f=20220810&t=20230810&i=d
@@ -78,3 +77,4 @@ https: app.get("/jgb-daily", async (req: Request, res: Response) => {
 
 app.get("/users", usersView);
 app.get("/deptvalue", deptValue);
+app.post("/deptvalue", upDateDeptValue);

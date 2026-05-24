@@ -7,6 +7,7 @@ const initialState: SHOWDE_SAVE[] = [
     show_save: {
       dept_id: null,
       user_foreign_id: null,
+      favorite: "",
       kinds: "",
       sspan: 0,
       fspan: 0,

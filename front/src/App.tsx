@@ -1,12 +1,9 @@
-import React, {
-  useEffect,
-  useState,
-  type ReactEventHandler,
-  type ReactHTMLElement,
-} from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { setId, setUser } from "./slices/userSlice";
+import { FavoriteModal } from "./components/FavoriteModal";
+import { setUser } from "./slices/userSlice";
 import { setDeptInfo } from "./slices/deptSlice";
+import { setDataState } from "./slices/dataSlice";
 import { useAppSelector, useAddDispatch } from "./store";
 import type { DAILY_POINT, SHOWDE_SAVE, USER } from "./type";
 import { store } from "./store";
@@ -27,16 +24,59 @@ type DEPT = {
   showmode: string;
 };
 
+type Favorite = {
+  dept_id: number | null;
+  user_foreign_id: number | null;
+  favorite: string;
+  kinds: string;
+  sspan: number;
+  fspan: number;
+  showmode: string;
+};
+
 function App() {
-  const { user, dept } = useAppSelector((state) => state);
+  const { user, dept, data_body } = useAppSelector((state) => state);
   const dispatch = useAddDispatch();
   const [data, setData] = useState<DAILY_POINT[]>([]);
+  const [deptYear, setDeptYear] = useState("");
+  const [deptMonth, setDeptMonth] = useState("");
+  const [deptDay, setDeptDay] = useState("");
+  const [fdeptYear, fsetDeptYear] = useState("");
+  const [fdeptMonth, fsetDeptMonth] = useState("");
+  const [fdeptDay, fsetDeptDay] = useState("");
+  const [favoriteData, setFavoriteData] = useState<Favorite | null>(null);
+
+  const handleSelectYear = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setDeptYear(e.target.value);
+  };
+  const handleSelectMonth = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newValue = String(e.target.value);
+    setDeptMonth(newValue.padStart(2, "0"));
+  };
+  const handleSelectDay = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newValue = String(e.target.value);
+    setDeptDay(newValue.padStart(2, "0"));
+  };
+
+  const handleSelectFyear = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    fsetDeptYear(e.target.value);
+  };
+  const handleSelecFmonth = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newValue = String(e.target.value);
+    fsetDeptMonth(newValue.padStart(2, "0"));
+  };
+  const handleSelectFday = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newValue = String(e.target.value);
+    fsetDeptDay(newValue.padStart(2, "0"));
+  };
+
+  // ###########################
   const date = new Date();
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   const now = `${year}${month}${day}`;
-
+  //############################
   const [formData, setFormData] = useState<DEPT>({
     kinds: "10yjpy.b",
     sspan: 20250101,
@@ -60,20 +100,6 @@ function App() {
     }));
   };
 
-  const handleStartChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setFormData((prevState) => ({
-      ...prevState,
-      sspan: Number(newValue),
-    }));
-  };
-  const handleEndChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setFormData((prevState) => ({
-      ...prevState,
-      fspan: Number(newValue),
-    }));
-  };
   const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setFormData((prevState) => ({
@@ -81,6 +107,7 @@ function App() {
       showmode: String(newValue),
     }));
   };
+
   const handleShowButton = () => {
     axios
       .get<DAILY_POINT[]>(`${import.meta.env.VITE_API_URL}/jgb-daily`, {
@@ -90,11 +117,27 @@ function App() {
       })
       .then((res) => {
         setData(res.data);
+        dispatch(setDataState(res.data));
         console.log(res.data);
       })
       .catch(console.error);
     console.log(formData);
   };
+
+  useEffect(() => {
+    const newValue = `${deptYear}${deptMonth}${deptDay}`;
+    setFormData((prevState) => ({
+      ...prevState,
+      sspan: Number(newValue),
+    }));
+  }, [deptYear, deptMonth, deptDay]);
+  useEffect(() => {
+    const newValue = `${fdeptYear}${fdeptMonth}${fdeptDay}`;
+    setFormData((prevState) => ({
+      ...prevState,
+      fspan: Number(newValue),
+    }));
+  }, [fdeptDay, fdeptMonth, fdeptYear]);
 
   useEffect(() => {
     axios.get<USER[]>(`${import.meta.env.VITE_API_URL}/users`).then((res) => {
@@ -106,34 +149,33 @@ function App() {
   }, []);
 
   useEffect(() => {
+    const idx = user[0] as any;
+    if (idx.user_name === "") return;
+    console.log(idx.user);
     axios
-      .get<SHOWDE_SAVE[]>(`${import.meta.env.VITE_API_URL}/deptvalue`)
+      .get<SHOWDE_SAVE[]>(`${import.meta.env.VITE_API_URL}/deptvalue`, {
+        params: {
+          user_id: idx.user_id,
+        },
+      })
       .then((res) => {
         dispatch(setDeptInfo(res.data));
+        setFavoriteData(res.data[0].show_save);
         console.log(res.data);
         console.log(dept);
         console.log(import.meta.env.VITE_APT_URL);
       });
-  }, [dispatch]);
+  }, [dispatch, user]);
 
   useEffect(() => {
     console.log(dept);
-    // if (
-    //   !dept ||
-    //   dept.length === 0 ||
-    //   !dept[0]?.show_save ||
-    //   dept[0].show_save.kinds === undefined
-    // ) {
-    //   return;
-    // }
     const showSave = dept[0] as any;
-    const assetionData = showSave.showSave;
     console.log(showSave.kinds, showSave.sspan);
     axios
       .get<DAILY_POINT[]>(`${import.meta.env.VITE_API_URL}/jgb-daily`, {
         params: {
           formData: {
-            kinds: "2yjpy.b",
+            kinds: showSave.kinds,
             sspan: showSave.sspan,
             fspan: showSave.fspan,
             showmode: showSave.showmode,
@@ -141,13 +183,13 @@ function App() {
         },
       })
       .then((res) => {
-        setData(res.data);
+        setData(res.data); //show用
         console.log(res.data, dept[0]);
       })
       .catch(console.error);
   }, [dept]);
   const get = store.getState();
-  console.log(get.dept[0]);
+  console.log(get);
 
   return (
     <div style={{ padding: 16 }}>
@@ -164,7 +206,7 @@ function App() {
                 : ""}
       </h2>
       <ResponsiveContainer width="100%" height={400}>
-        <LineChart data={data}>
+        <LineChart data={data_body}>
           <XAxis dataKey="date" />
           <YAxis />
           <Tooltip />
@@ -186,27 +228,6 @@ function App() {
             }
             dot={false}
           />
-          {/* <Line
-            type="monotone"
-            dataKey="y5"
-            stroke="#82CA9D"
-            name="5年"
-            dot={false}
-          />
-          <Line
-            type="monotone"
-            dataKey="y10"
-            stroke="#FF7300"
-            name="10年"
-            dot={false}
-          />
-          <Line
-            type="monotone"
-            dataKey="y30"
-            stroke="#ff0080"
-            name="30年"
-            dot={false}
-          /> */}
         </LineChart>
       </ResponsiveContainer>
       <div>
@@ -214,7 +235,7 @@ function App() {
           種類:
           <select onChange={handleKindChange} defaultValue={""}>
             <option value={""}></option>
-            {KINDS.map((kind, index) => {
+            {KINDS.map((kind) => {
               const [[label, value]] = Object.entries(kind);
               return (
                 <option key={value} value={value}>
@@ -225,12 +246,70 @@ function App() {
           </select>
         </div>
         <div>
-          開始日:
-          <input type="text" onChange={handleStartChange} />
+          開始年:
+          <select onChange={handleSelectYear} defaultValue={""}>
+            <option value={""}></option>
+            {Array.from({ length: 2026 - 2020 + 1 }, (_, i) => 2020 + i).map(
+              (year) => (
+                <option key={year} value={year}>
+                  {year}年
+                </option>
+              ),
+            )}
+          </select>
+          開始月：
+          <select onChange={handleSelectMonth} defaultValue={""}>
+            <option value={""}></option>
+            {Array.from({ length: 12 - 1 + 1 }, (_, i) => 1 + i).map(
+              (month) => (
+                <option key={month} value={month}>
+                  {month}月
+                </option>
+              ),
+            )}
+          </select>
+          開始日：
+          <select onChange={handleSelectDay} defaultValue={""}>
+            <option value={""}></option>
+            {Array.from({ length: 31 - 1 + 1 }, (_, i) => 1 + i).map((day) => (
+              <option key={day} value={day}>
+                {day}日
+              </option>
+            ))}
+          </select>
         </div>
         <div>
-          終了日:
-          <input type="text" onChange={handleEndChange} />
+          終了年:
+          <select onChange={handleSelectFyear} defaultValue={""}>
+            <option value={""}></option>
+            {Array.from({ length: 2026 - 2020 + 1 }, (_, i) => 2020 + i).map(
+              (year) => (
+                <option key={year} value={year}>
+                  {year}年
+                </option>
+              ),
+            )}
+          </select>
+          終了月：
+          <select onChange={handleSelecFmonth} defaultValue={""}>
+            <option value={""}></option>
+            {Array.from({ length: 12 - 1 + 1 }, (_, i) => 1 + i).map(
+              (month) => (
+                <option key={month} value={month}>
+                  {month}月
+                </option>
+              ),
+            )}
+          </select>
+          終了日：
+          <select onChange={handleSelectFday} defaultValue={""}>
+            <option value={""}></option>
+            {Array.from({ length: 31 - 1 + 1 }, (_, i) => 1 + i).map((day) => (
+              <option key={day} value={day}>
+                {day}日
+              </option>
+            ))}
+          </select>
         </div>
         <div>
           {SHOWMODE.map((mode) => (
@@ -248,6 +327,9 @@ function App() {
         </div>
       </div>
       <button onClick={handleShowButton}>リクエスト</button>
+      <div>
+        <FavoriteModal />
+      </div>
     </div>
   );
 }
