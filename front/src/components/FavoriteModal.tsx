@@ -1,18 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { setUser } from "../slices/userSlice";
 import { setDeptInfo } from "../slices/deptSlice";
 import { useAppSelector, useAddDispatch } from "../store";
-import type { DAILY_POINT, SHOWDE_SAVE, USER } from "../type";
-
-type DEPT = {
-  user_foreign_id: number;
-  favorite: string;
-  kinds: string;
-  sspan: number;
-  fspan: number;
-  showmode: string;
-};
+import type { DAILY_POINT, SHOWDE_SAVE, FAVORITE_DEPT } from "../type";
 
 export const FavoriteModal = () => {
   const { user, dept } = useAppSelector((state) => state);
@@ -24,9 +14,10 @@ export const FavoriteModal = () => {
   const [fdeptYear, fsetDeptYear] = useState("");
   const [fdeptMonth, fsetDeptMonth] = useState("");
   const [fdeptDay, fsetDeptDay] = useState("");
-
+  const [favoriteName, setFavoriteName] = useState("");
   const handleSelectYear = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setDeptYear(e.target.value);
+    const newValue = e.target.value;
+    setDeptYear(newValue);
   };
   const handleSelectMonth = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newValue = String(e.target.value);
@@ -48,7 +39,13 @@ export const FavoriteModal = () => {
     const newValue = String(e.target.value);
     fsetDeptDay(newValue.padStart(2, "0"));
   };
-
+  const handleFavoriteNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setFormData((prevState) => ({
+      ...prevState,
+      favorite: newValue,
+    }));
+  };
   // ###########################
   const date = new Date();
   const year = date.getFullYear();
@@ -56,8 +53,8 @@ export const FavoriteModal = () => {
   const day = String(date.getDate()).padStart(2, "0");
   const now = `${year}${month}${day}`;
   //############################
-  const [formData, setFormData] = useState<DEPT>({
-    user_foreign_id: 1,
+  const [formData, setFormData] = useState<FAVORITE_DEPT>({
+    user_foreign_id: (user[0] as any).user_id,
     favorite: "テスト１",
     kinds: "2yjpy.b",
     sspan: 20251128,
@@ -89,7 +86,7 @@ export const FavoriteModal = () => {
     }));
   };
 
-  const handleShowButton = () => {
+  const handleFavoriteSaveButton = () => {
     console.log("formData", formData);
     const idx = user[0] as any;
     axios
@@ -108,9 +105,6 @@ export const FavoriteModal = () => {
       })
       .then((res) => {
         dispatch(setDeptInfo(res.data));
-        console.log(res.data);
-        console.log("更新後データ", dept);
-        console.log(import.meta.env.VITE_APT_URL);
       })
       .catch(console.error);
     console.log(dept);
@@ -129,8 +123,11 @@ export const FavoriteModal = () => {
       fspan: Number(newValue),
     }));
   }, [fdeptDay, fdeptMonth, fdeptYear]);
+
   return (
     <div>
+      お気に入りの名前：
+      <input type="text" onChange={handleFavoriteNameChange} />
       <div>
         種類:
         <select onChange={handleKindChange} defaultValue={""}>
@@ -221,7 +218,7 @@ export const FavoriteModal = () => {
           </label>
         ))}
       </div>
-      <button onClick={handleShowButton}>登録</button>
+      <button onClick={handleFavoriteSaveButton}>登録</button>
     </div>
   );
 };

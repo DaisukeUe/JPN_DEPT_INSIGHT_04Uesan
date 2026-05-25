@@ -8,7 +8,14 @@ import type { DAILY_ROW } from "./type_backend";
 
 const PORT = 3000;
 const app = express();
-const { usersView, deptValue, upDateDeptValue } = viewsFunction();
+const {
+  usersView,
+  deptValue,
+  upDateDeptValue,
+  loginUser,
+  signUpUser,
+  deleteFavorite,
+} = viewsFunction();
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "/public")));
@@ -27,44 +34,25 @@ async function fetchDaily(
   const json = await csv().fromString(res.data);
   return json;
 }
-//stooq.com/q/d/l/?s=2yjpy.b&f=20220810&t=20230810&i=d
-// `https://stooq.com/q/d/?f=20220810&t=20230810&s=2yjpy.b&c=0&i=d&apikey=udu8gyS2pTVcXsD9U1ONl3jtFJbvahfC`
-https: app.get("/jgb-daily", async (req: Request, res: Response) => {
+app.get("/jgb-daily", async (req: Request, res: Response) => {
   const kinds = req.query["formData[kinds]"] as string;
   const sspanStr = req.query["formData[sspan]"] as string;
   const fspanStr = req.query["formData[fspan]"] as string;
   const showmode = req.query["formData[showmode]"] as string;
 
-  // これで NaN にならず、正しく数値に変換されます
-  const sspanNum = Number(sspanStr || 0); // 20241212
-  const fspanNum = Number(fspanStr || 0); // 20251212
+  const sspanNum = Number(sspanStr || 0);
+  const fspanNum = Number(fspanStr || 0);
 
   try {
     const selected = await fetchDaily(sspanNum, fspanNum, kinds, showmode);
-    // fetchDaily("5yjpy.b"),
-    // fetchDaily("10yjpy.b"),
-    // fetchDaily("30yjpy.b"),
-
-    // console.log(req.query);
-    // console.log(sspanNum, fspanNum);
-    // console.log(selected);
-
     const map: Record<string, any> = {};
     for (const row of selected) {
-      map[row.Date] = { date: row.Date, selected: parseFloat(row.Close) }; //終わり値
+      map[row.Date] = {
+        date: row.Date,
+        selected: parseFloat(row.Close),
+        kinds: kinds,
+      };
     }
-    // for (const row of y10) {
-    //   if (!map[row.Date]) map[row.Date] = { date: row.Date };
-    //   map[row.Date].y10 = parseFloat(row.Close);
-    // }
-    // for (const row of y5) {
-    //   if (!map[row.Date]) map[row.Date] = { date: row.Date };
-    //   map[row.Date].y5 = parseFloat(row.Close);
-    // }
-    // for (const row of y2) {
-    //   if (!map[row.Date]) map[row.Date] = { date: row.Date };
-    //   map[row.Date].y2 = parseFloat(row.Close);
-    // }
     const data = Object.values(map).sort(
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
     );
@@ -78,3 +66,6 @@ https: app.get("/jgb-daily", async (req: Request, res: Response) => {
 app.get("/users", usersView);
 app.get("/deptvalue", deptValue);
 app.post("/deptvalue", upDateDeptValue);
+app.post("/userlogin", loginUser);
+app.post("/signup", signUpUser);
+app.delete("/delete", deleteFavorite);
