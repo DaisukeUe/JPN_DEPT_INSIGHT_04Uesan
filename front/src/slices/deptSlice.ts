@@ -20,10 +20,10 @@ const deptSlice = createSlice({
   name: "dept",
   initialState,
   reducers: {
-    setDeptInfo: (state, action: PayloadAction<SHOWDE_SAVE[]>) => {
+    setDeptInfo: (_, action: PayloadAction<SHOWDE_SAVE[]>) => {
       return action.payload;
     },
-    setClearDept: (state) => {
+    setClearDept: () => {
       return initialState;
     },
   },

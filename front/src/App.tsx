@@ -8,14 +8,7 @@ import { useAppSelector, useAddDispatch } from "./store";
 import { Navber } from "./components/Navber";
 import "./components/indicator.css";
 import "./App.css";
-import type {
-  DAILY_POINT,
-  SHOWDE_SAVE,
-  DEPT,
-  FAVORITE,
-  FAVORITE_DEPT,
-} from "./type";
-import { store } from "./store";
+import type { DAILY_POINT, SHOWDE_SAVE, DEPT, FAVORITE } from "./type";
 import {
   LineChart,
   Line,
@@ -42,7 +35,7 @@ function App() {
   const [mainFavorite, setMainFavorite] = useState("サンプル１");
   const [effectControl, setEffectControl] = useState(true);
   const [userEffectControl, setUserEffectControl] = useState(true);
-
+  console.log(data, favoriteData, userEffectControl);
   const handleSelectYear = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setDeptYear(e.target.value);
   };
@@ -536,7 +529,7 @@ function App() {
           </div>
           <div>
             <button className="btn-app" onClick={handleShowModal}>
-              お気に入り登録モーダル表示/非表示
+              {!showModal ? `お気に入り登録モーダル表示` : `登録モーダル非表示`}
             </button>
             {showModal && <FavoriteModal />}
           </div>

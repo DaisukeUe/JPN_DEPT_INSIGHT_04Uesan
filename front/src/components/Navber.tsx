@@ -1,4 +1,3 @@
-import React from "react";
 import "./navbar.css";
 import { useAppSelector, useAddDispatch } from "../store";
 import { useNavigate } from "react-router";
@@ -6,11 +5,10 @@ import { setClearUser } from "../slices/userSlice";
 import { setClearDept } from "../slices/deptSlice";
 import { setLogin } from "../slices/loginSlice";
 import { setClearDataState } from "../slices/dataSlice";
-import IconButton from "@mui/material/IconButton";
 import LogoutIcon from "@mui/icons-material/Logout";
 
 export const Navber = () => {
-  const { user, dept, login } = useAppSelector((state) => state);
+  const { user, login } = useAppSelector((state) => state);
   const dispatch = useAddDispatch();
   const navigate = useNavigate();
   const handleReturnToLogin = () => {

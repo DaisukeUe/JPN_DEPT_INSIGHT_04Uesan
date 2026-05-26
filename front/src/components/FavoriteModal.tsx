@@ -2,20 +2,19 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { setDeptInfo } from "../slices/deptSlice";
 import { useAppSelector, useAddDispatch } from "../store";
-import type { DAILY_POINT, SHOWDE_SAVE, FAVORITE_DEPT } from "../type";
+import type { SHOWDE_SAVE, FAVORITE_DEPT } from "../type";
 import "./favoriteModal.css";
 
 export const FavoriteModal = () => {
   const { user, dept } = useAppSelector((state) => state);
   const dispatch = useAddDispatch();
-  const [data, setData] = useState<DAILY_POINT[]>([]);
   const [deptYear, setDeptYear] = useState("");
   const [deptMonth, setDeptMonth] = useState("");
   const [deptDay, setDeptDay] = useState("");
   const [fdeptYear, fsetDeptYear] = useState("");
   const [fdeptMonth, fsetDeptMonth] = useState("");
   const [fdeptDay, fsetDeptDay] = useState("");
-  const [favoriteName, setFavoriteName] = useState("");
+
   const handleSelectYear = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newValue = e.target.value;
     setDeptYear(newValue);

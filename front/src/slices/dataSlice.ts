@@ -16,7 +16,7 @@ const dataSlice = createSlice({
   name: "data_body",
   initialState,
   reducers: {
-    setDataState: (state, action: PayloadAction<DAILY_POINT[]>) => {
+    setDataState: (_, action: PayloadAction<DAILY_POINT[]>) => {
       return action.payload;
     },
     setClearDataState: () => {

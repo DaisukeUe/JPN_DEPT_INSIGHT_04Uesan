@@ -10,7 +10,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 export const ShowFavoriteChange = () => {
   const dispatch = useAddDispatch();
-  const { data_body, dept, user } = useAppSelector((state) => state);
+  const { dept, user } = useAppSelector((state) => state);
   const [getName, setGetName] = useState("");
 
   const handleFavoriteChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -49,7 +49,7 @@ export const ShowFavoriteChange = () => {
       .catch(console.error);
   };
 
-  const handleDeleteButton = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleDeleteButton = () => {
     const judge = window.confirm("選択中のお気に入りを削除しますか？");
     if (!judge) return;
     const getObject = dept.find((dep: any) => dep.favorite === getName);
