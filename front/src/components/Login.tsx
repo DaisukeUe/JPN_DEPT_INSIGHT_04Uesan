@@ -2,8 +2,12 @@ import { useNavigate } from "react-router";
 import { useState, useEffect } from "react";
 import { useAppSelector, useAddDispatch, store } from "../store";
 import { setUser } from "../slices/userSlice";
+import { setLogin } from "../slices/loginSlice";
 import type { USER } from "../type";
 import axios from "axios";
+import { Navber } from "./Navber";
+import "./login.css";
+
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useAddDispatch();
@@ -35,9 +39,10 @@ const Login = () => {
 
   const handleLogin = () => {
     const dataBaseUser = user.find(
-      (obj) => (obj as any).user_name === currentUser,
+      (obj) => (obj as any).user_name === String(currentUser),
     );
-    if ((dataBaseUser as any).user_name === undefined)
+    console.log("databaseUser", dataBaseUser);
+    if (dataBaseUser === undefined)
       return alert("存在しないユーザーです。サインアップしてください");
     axios
       .post(`${import.meta.env.VITE_API_URL}/userlogin`, {
@@ -50,21 +55,70 @@ const Login = () => {
           console.log(res.data);
           navigate("/main");
           dispatch(setUser(res.data));
+          dispatch(setLogin(true));
+        } else {
+          console.log(res);
+          alert(res.data["data"]);
         }
-        console.log(res.data);
       })
       .catch(console.error);
   };
+  const handleSubmit = (e: React.SubmitEvent) => {
+    e.preventDefault();
+    handleLogin();
+  };
+
   const get = store.getState();
   console.log(get);
   return (
     <div>
-      ユーザーネーム
-      <input type="text" onChange={handleNameChange} />
-      パスワード
-      <input type="password" onChange={handlePasswordChange} />
-      <button onClick={handleLogin}>ログイン</button>
-      <button onClick={handleNavigateSignUp}>サインアップ</button>
+      <Navber />
+      <div className="login-contena">
+        <div className="login-card">
+          <div className="login-header">
+            <div className="login-logo">📈</div>
+            <h2 className="login-title">DEPT Insight</h2>
+            <p className="login-subtitle">アカウントにログインしてください</p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="login-form">
+            <div className="input-group">
+              <label className="input-label">ユーザーネーム</label>
+              <input
+                type="text"
+                placeholder="ユーザー名を入力"
+                onChange={handleNameChange}
+                className="form-input"
+                required
+              />
+            </div>
+
+            <div className="input-group">
+              <label className="input-label">パスワード</label>
+              <input
+                type="password"
+                placeholder="••••••••"
+                onChange={handlePasswordChange}
+                className="form-input"
+                required
+              />
+            </div>
+
+            <button type="submit" className="btn-main">
+              ログイン
+            </button>
+          </form>
+
+          <div className="login-footer">
+            <span className="footer-text">
+              アカウントをお持ちでないですか？
+            </span>
+            <button onClick={handleNavigateSignUp} className="btn-sub">
+              新規登録（サインアップ）
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

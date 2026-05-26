@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./slices/userSlice";
 import deptRedeucer from "./slices/deptSlice";
 import dataRedeuser from "./slices/dataSlice";
+import loginReducer from "./slices/loginSlice";
 import { useDispatch, useSelector } from "react-redux";
 import type { TypedUseSelectorHook } from "react-redux";
 export const store = configureStore({
@@ -9,6 +10,7 @@ export const store = configureStore({
     user: userReducer,
     dept: deptRedeucer,
     data_body: dataRedeuser,
+    login: loginReducer,
   },
 });
 

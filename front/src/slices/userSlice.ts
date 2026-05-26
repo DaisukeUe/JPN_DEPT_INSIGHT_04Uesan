@@ -23,7 +23,10 @@ const userSlice = createSlice({
     setId: (state, action: PayloadAction<USER>) => {
       state[0] = action.payload;
     },
+    setClearUser: (state) => {
+      return initialState;
+    },
   },
 });
-export const { setUser, setId } = userSlice.actions;
+export const { setUser, setId, setClearUser } = userSlice.actions;
 export default userSlice.reducer;

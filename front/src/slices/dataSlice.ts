@@ -19,7 +19,10 @@ const dataSlice = createSlice({
     setDataState: (state, action: PayloadAction<DAILY_POINT[]>) => {
       return action.payload;
     },
+    setClearDataState: () => {
+      return initialState;
+    },
   },
 });
-export const { setDataState } = dataSlice.actions;
+export const { setDataState, setClearDataState } = dataSlice.actions;
 export default dataSlice.reducer;

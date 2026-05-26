@@ -2,6 +2,10 @@ import type { SHOWDE_SAVE, USER } from "../front/src/type";
 import { db } from "../knex";
 import crypto from "crypto";
 import { Response, Request } from "express";
+import { DAILY_ROW } from "../type_backend";
+import axios from "axios";
+import csv from "csvtojson";
+
 const USERS_TABLE = "users";
 const DEPT_TABLE = "dept_value";
 const date = new Date();
@@ -9,7 +13,52 @@ const year = date.getFullYear();
 const month = String(date.getMonth() + 1).padStart(2, "0");
 const day = String(date.getDate()).padStart(2, "0");
 const now = `${year}${month}${day}`;
+
 export const viewsFunction = () => {
+  async function fetchDaily(
+    sSpan: number,
+    fSpan: Number,
+    kinds: string,
+    showMode: string,
+  ): Promise<DAILY_ROW[]> {
+    const url = `https://stooq.com/q/d/l/?s=${kinds}&f=${sSpan}&t=${fSpan}&i=${showMode}&apikey=udu8gyS2pTVcXsD9U1ONl3jtFJbvahfC`;
+    const res = await axios.get(url);
+    const json = await csv().fromString(res.data);
+    return json;
+  }
+
+  const graphData = async (req: Request, res: Response) => {
+    const kinds = req.query["formData[kinds]"] as string;
+    const sspanStr = req.query["formData[sspan]"] as string;
+    const fspanStr = req.query["formData[fspan]"] as string;
+    const showmode = req.query["formData[showmode]"] as string;
+
+    const sspanNum = Number(sspanStr || 0);
+    const fspanNum = Number(fspanStr || 0);
+
+    try {
+      const selected = await fetchDaily(sspanNum, fspanNum, kinds, showmode);
+      const map: Record<string, any> = {};
+      for (const row of selected) {
+        map[row.Date] = {
+          date: row.Date,
+          selected: parseFloat(row.Close),
+          kinds: kinds,
+          sspanNum: sspanNum,
+          fspanNum: fspanNum,
+          showmode: showmode,
+        };
+      }
+      const data = Object.values(map).sort(
+        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+      );
+      res.json(data);
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ error: "値を取得できませんでした。" });
+    }
+  };
+
   const usersView = async (req: Request, res: Response) => {
     let result: USER[] = [];
     try {
@@ -54,6 +103,11 @@ export const viewsFunction = () => {
     console.log("RRRRR", result, "REQQQQ", req.body);
     try {
       result = req.body.formData;
+      const compareData = await db(DEPT_TABLE).where(
+        "user_foreign_id",
+        result["user_foreign_id"],
+      );
+      console.log("コンオペデータ", compareData);
       if (!result) {
         return res.status(400).json({ error: "データが空です" });
       }
@@ -86,6 +140,8 @@ export const viewsFunction = () => {
         const userData = await db(USERS_TABLE).where("user_id", id);
         console.log(userData);
         res.status(200).json(userData);
+      } else {
+        res.status(203).json({ data: "パスワードが違います" });
       }
     } catch (err) {
       console.error("入力エラー", err);
@@ -128,6 +184,7 @@ export const viewsFunction = () => {
   };
 
   return {
+    graphData,
     usersView,
     deptValue,
     upDateDeptValue,

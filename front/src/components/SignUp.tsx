@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router";
 import { useState } from "react";
 import axios from "axios";
+import { Navber } from "./Navber";
+import "./login.css";
 const SignUp = () => {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState("");
@@ -28,20 +30,64 @@ const SignUp = () => {
       })
       .then((res) => {
         if (res.status === 200) {
+          alert("登録完了しました。");
           navigate("/");
+        } else {
+          alert("登録失敗");
         }
       })
       .catch(console.error);
   };
+  const handleSubmit = (e: React.SubmitEvent) => {
+    e.preventDefault();
+    handleSaveUserData();
+  };
   return (
     <div>
-      ユーザーネーム
-      <input type="text" onChange={handleNameChange} />
-      パスワード
-      <input type="password" onChange={handlePasswordChange} />
-      <button onClick={handleSaveUserData}>登録</button>
-      <button onClick={handleReturnToTitle}>ログイン画面へ</button>
-      サインアップ
+      <Navber />
+      <div className="login-contena">
+        <div className="login-card">
+          <div className="login-header">
+            <div className="login-logo">📈</div>
+            <h2 className="login-title">DEPT Insight</h2>
+            <p className="login-subtitle">アカウントを登録してください</p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="login-form">
+            <div className="input-group">
+              <label className="input-label">ユーザーネーム</label>
+              <input
+                type="text"
+                placeholder="ユーザー名を入力"
+                onChange={handleNameChange}
+                className="form-input"
+                required
+              />
+            </div>
+
+            <div className="input-group">
+              <label className="input-label">パスワード</label>
+              <input
+                type="password"
+                placeholder="••••••••"
+                onChange={handlePasswordChange}
+                className="form-input"
+                required
+              />
+            </div>
+
+            <button type="submit" className="btn-main">
+              ユーザー登録
+            </button>
+          </form>
+
+          <div className="login-footer">
+            <button onClick={handleReturnToTitle} className="btn-sub">
+              ログイン画面に戻る
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

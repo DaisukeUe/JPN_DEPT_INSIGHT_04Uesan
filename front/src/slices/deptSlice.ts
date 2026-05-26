@@ -23,8 +23,11 @@ const deptSlice = createSlice({
     setDeptInfo: (state, action: PayloadAction<SHOWDE_SAVE[]>) => {
       return action.payload;
     },
+    setClearDept: (state) => {
+      return initialState;
+    },
   },
 });
 
-export const { setDeptInfo } = deptSlice.actions;
+export const { setDeptInfo, setClearDept } = deptSlice.actions;
 export default deptSlice.reducer;
