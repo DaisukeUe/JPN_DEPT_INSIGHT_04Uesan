@@ -20,7 +20,11 @@
 
 #
 
-技術スタック -フロントエンド:React 19, TypeScript, ReduxToolkit, CSS -バックエンド:Node.js, Express, knex, PostgreSQL -インフラ:ーー
+技術スタック
+
+    -フロントエンド:React 19, TypeScript, ReduxToolkit, CSS
+    -バックエンド:Node.js, Express, knex, PostgreSQL
+    -インフラ:ーー
 
 #
 
