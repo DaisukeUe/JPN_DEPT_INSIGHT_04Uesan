@@ -21,7 +21,8 @@ describe("views", () => {
       .then(() => db.seed.run())
       .catch(console.error);
   });
-  const { getUsers, fetchDaily, createUser, loginAuth } = viewsRepository();
+  const { getUsers, fetchDaily, createUser, loginAuth, getDeptValue } =
+    viewsRepository();
 
   describe("userList", () => {
     it("should return array of users", async () => {
@@ -70,6 +71,14 @@ describe("views", () => {
       console.log(result);
       expect(3).equal((result[0] as any).user_id);
       expect("test_name3").equal((result[0] as any).user_name);
+    });
+  });
+
+  describe("getDeptValue", () => {
+    it("should return userDeptValu", async () => {
+      const result = await getDeptValue(2);
+      console.log(result);
+      expect(result).to.be.an("array");
     });
   });
 

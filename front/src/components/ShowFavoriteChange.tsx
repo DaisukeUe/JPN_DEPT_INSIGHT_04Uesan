@@ -112,23 +112,17 @@ export const ShowFavoriteChange = () => {
             })}
           </select>
         </div>
-
         {/* 削除ボタン */}
-        <button
+        <IconButton
+          aria-label="delete"
+          color="error"
+          size="small"
+          sx={{ p: 0 }}
           onClick={handleDeleteButton}
-          className="btn-delete"
-          title="選択したお気に入りを削除"
         >
-          <IconButton
-            aria-label="delete"
-            color="error"
-            size="small"
-            sx={{ p: 0 }}
-          >
-            <DeleteIcon sx={{ fontSize: 20 }} />
-          </IconButton>
-          削除
-        </button>
+          <DeleteIcon sx={{ fontSize: 40 }} />
+        </IconButton>
+        削除
       </div>
     </div>
   );

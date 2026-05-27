@@ -19,6 +19,7 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function App() {
   const { user, dept, data_body } = useAppSelector((state) => state);
@@ -35,6 +36,7 @@ function App() {
   const [mainFavorite, setMainFavorite] = useState("サンプル１");
   const [effectControl, setEffectControl] = useState(true);
   const [userEffectControl, setUserEffectControl] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   console.log(data, favoriteData, userEffectControl);
   const handleSelectYear = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setDeptYear(e.target.value);
@@ -100,24 +102,30 @@ function App() {
     }));
   };
 
-  const handleShowButton = () => {
+  const handleShowButton = async () => {
     if (Number(formData["sspan"]) - Number(formData["fspan"]) >= 0) {
       alert("開始日が終了日の後になっています");
       return;
     }
-    axios
-      .get<DAILY_POINT[]>(`${import.meta.env.VITE_API_URL}/jgb-daily`, {
-        params: {
-          formData: formData,
-        },
-      })
-      .then((res) => {
-        setData(res.data);
-        dispatch(setDataState(res.data));
-        console.log(res.data);
-      })
-      .catch(console.error);
-    console.log(formData);
+    setIsLoading(true);
+    try {
+      axios
+        .get<DAILY_POINT[]>(`${import.meta.env.VITE_API_URL}/jgb-daily`, {
+          params: {
+            formData: formData,
+          },
+        })
+        .then((res) => {
+          setData(res.data);
+          dispatch(setDataState(res.data));
+          console.log(res.data);
+        });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+      console.log(formData);
+    }
   };
 
   const handleFavoriteSaveMain = () => {
@@ -520,7 +528,11 @@ function App() {
               </div>
 
               <button className="btn-request" onClick={handleShowButton}>
-                グラフを更新（リクエスト）
+                {isLoading ? (
+                  <CircularProgress />
+                ) : (
+                  "グラフを更新（リクエスト）"
+                )}
               </button>
             </div>
           )}

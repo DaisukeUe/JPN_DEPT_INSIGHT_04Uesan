@@ -45,11 +45,11 @@ const SignUp = () => {
   return (
     <div>
       <Navber />
-      <div className="login-contena">
+      <div className="login-contena signup">
         <div className="login-card">
           <div className="login-header">
-            <div className="login-logo">📈</div>
-            <h2 className="login-title">DEPT Insight</h2>
+            <div className="login-logo">✒️</div>
+            <h2 className="login-title">SIGN UP</h2>
             <p className="login-subtitle">アカウントを登録してください</p>
           </div>
 

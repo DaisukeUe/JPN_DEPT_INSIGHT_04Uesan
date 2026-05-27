@@ -7,6 +7,11 @@ import axios from "axios";
 import csv from "csvtojson";
 const USERS_TABLE = "users";
 const DEPT_TABLE = "dept_value";
+const date = new Date();
+const year = date.getFullYear();
+const month = String(date.getMonth() + 1).padStart(2, "0");
+const day = String(date.getDate()).padStart(2, "0");
+const now = `${year}${month}${day}`;
 export const viewsRepository = () => {
   const getUsers = async (): Promise<USER[]> => {
     return await db(USERS_TABLE).select();
@@ -30,6 +35,26 @@ export const viewsRepository = () => {
     return [];
   };
 
+  const getDeptValue = async (id: number): Promise<SHOWDE_SAVE[]> => {
+    let result: SHOWDE_SAVE[] = [];
+    result = await db(DEPT_TABLE).where("user_foreign_id", id);
+    console.log("結果", result);
+    if (result.length <= 0) {
+      (result as any).push({
+        dept_id: null,
+        favorite: "",
+        kinds: "10yjpy.b",
+        sspan: 20250101,
+        fspan: Number(now),
+        showmode: "d",
+        user_foreign_id: null,
+      });
+      return result;
+    }
+    console.log("結果", result);
+    return result;
+  };
+
   const fetchDaily = async (
     sSpan: number,
     fSpan: Number,
@@ -47,5 +72,6 @@ export const viewsRepository = () => {
     fetchDaily,
     createUser,
     loginAuth,
+    getDeptValue,
   };
 };
