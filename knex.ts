@@ -1,6 +1,7 @@
 import knex from "knex";
 import config from "./knexfile";
 
+//コメントアウトで切り替え
 const environment = "development";
 // const environment = "test";
 const connectionConfig = config[process.env.NODE_ENV || environment];

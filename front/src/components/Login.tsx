@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import { useState, useEffect } from "react";
-import { useAppSelector, useAddDispatch, store } from "../store";
+import { useAppSelector, useAddDispatch } from "../store";
 import { setUser } from "../slices/userSlice";
 import { setLogin } from "../slices/loginSlice";
 import type { USER } from "../type";
@@ -18,9 +18,6 @@ const Login = () => {
   useEffect(() => {
     axios.get<USER[]>(`${import.meta.env.VITE_API_URL}/users`).then((res) => {
       dispatch(setUser(res.data));
-      console.log(res.data);
-      console.log(user);
-      console.log(import.meta.env.VITE_APT_URL);
     });
   }, []);
 
@@ -52,12 +49,10 @@ const Login = () => {
       })
       .then((res) => {
         if (res.status === 200) {
-          console.log(res.data);
           navigate("/main");
           dispatch(setUser(res.data));
           dispatch(setLogin(true));
         } else {
-          console.log(res);
           alert(res.data["data"]);
         }
       })
@@ -68,8 +63,6 @@ const Login = () => {
     handleLogin();
   };
 
-  const get = store.getState();
-  console.log(get);
   return (
     <div>
       <Navber />

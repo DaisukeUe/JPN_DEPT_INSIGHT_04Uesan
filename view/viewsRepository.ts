@@ -1,7 +1,6 @@
 import type { SHOWDE_SAVE, USER } from "../front/src/type";
 import { db } from "../knex";
 import crypto from "crypto";
-import { Response, Request } from "express";
 import { DAILY_ROW } from "../type_backend";
 import axios from "axios";
 import csv from "csvtojson";
@@ -38,7 +37,6 @@ export const viewsRepository = () => {
   const getDeptValue = async (id: number): Promise<SHOWDE_SAVE[]> => {
     let result: SHOWDE_SAVE[] = [];
     result = await db(DEPT_TABLE).where("user_foreign_id", id);
-    console.log("結果", result);
     if (result.length <= 0) {
       (result as any).push({
         dept_id: null,
@@ -51,7 +49,15 @@ export const viewsRepository = () => {
       });
       return result;
     }
-    console.log("結果", result);
+    return result;
+  };
+  const dataUpdate = async (object: any): Promise<any> => {
+    const result = await db(DEPT_TABLE).insert(object, ["*"]);
+    return result;
+  };
+
+  const removeFavorite = async (id: number): Promise<any> => {
+    const result = await db(DEPT_TABLE).where("dept_id", id).del(["*"]);
     return result;
   };
 
@@ -73,5 +79,7 @@ export const viewsRepository = () => {
     createUser,
     loginAuth,
     getDeptValue,
+    dataUpdate,
+    removeFavorite,
   };
 };

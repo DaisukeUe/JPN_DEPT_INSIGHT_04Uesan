@@ -22,7 +22,6 @@ const SignUp = () => {
   };
 
   const handleSaveUserData = () => {
-    console.log(currentUser);
     axios
       .post(`${import.meta.env.VITE_API_URL}/signup`, {
         user_name: currentUser,

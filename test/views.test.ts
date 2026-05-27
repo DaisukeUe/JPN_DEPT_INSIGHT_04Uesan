@@ -1,18 +1,12 @@
-import { expect, should } from "chai";
+import { expect } from "chai";
 import { db } from "../knex";
-import { viewsFunction } from "../view/views";
 import { viewsRepository } from "../view/viewsRepository";
 import { describe } from "mocha";
 import { before } from "mocha";
 import config from "../knexfile";
 import crypto from "crypto";
-const USERS_TABLE = "users";
-const DEPT_TABLE = "dept_value";
 
 describe("views", () => {
-  let userRepo;
-  let deptRepo;
-
   before(async () => {
     await db.migrate
       .forceFreeMigrationsLock()
@@ -27,7 +21,6 @@ describe("views", () => {
   describe("userList", () => {
     it("should return array of users", async () => {
       const usersList = await getUsers();
-      console.log(usersList);
       expect(usersList).to.be.an("array");
     });
 
@@ -54,10 +47,8 @@ describe("views", () => {
       const soltPassword = `${solt}${newUser.password}`;
       const hash = crypto.createHash("sha256");
       const hashPassword = hash.update(soltPassword).digest("hex");
-      console.log(hashPassword);
       newUser.password = hashPassword;
       const reslut = await createUser(newUser);
-      console.log(newUser, reslut[0]);
       expect(newUser.user_id).equal((reslut[0] as any).user_id);
       expect(newUser.user_name).equal((reslut[0] as any).user_name);
       expect(newUser.solt).equal((reslut[0] as any).solt);
@@ -68,7 +59,6 @@ describe("views", () => {
   describe("userLogin", () => {
     it("should return login user", async () => {
       const result = await loginAuth(3, "123456");
-      console.log(result);
       expect(3).equal((result[0] as any).user_id);
       expect("test_name3").equal((result[0] as any).user_name);
     });
@@ -77,7 +67,6 @@ describe("views", () => {
   describe("getDeptValue", () => {
     it("should return userDeptValu", async () => {
       const result = await getDeptValue(2);
-      console.log(result);
       expect(result).to.be.an("array");
     });
   });

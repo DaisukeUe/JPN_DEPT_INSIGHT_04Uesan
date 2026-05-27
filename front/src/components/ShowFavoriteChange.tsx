@@ -17,7 +17,6 @@ export const ShowFavoriteChange = () => {
     const idx = user[0] as any;
     const getObject = dept.find((dep: any) => dep.favorite === e.target.value);
     setGetName(e.target.value);
-    console.log(getObject);
     const show_save = getObject as any;
     axios
       .get<DAILY_POINT[]>(`${import.meta.env.VITE_API_URL}/jgb-daily`, {
@@ -88,9 +87,7 @@ export const ShowFavoriteChange = () => {
   return (
     <div className="favorite-panel">
       <label className="favorite-label">お気に入りからリクエスト</label>
-
       <div className="favorite-controls">
-        {/* セレクトボックス */}
         <div className="select-container">
           <select
             defaultValue={""}

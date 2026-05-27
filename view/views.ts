@@ -2,20 +2,19 @@ import type { SHOWDE_SAVE, USER } from "../front/src/type";
 import { db } from "../knex";
 import crypto from "crypto";
 import { Response, Request } from "express";
-import { DAILY_ROW } from "../type_backend";
-import axios from "axios";
-import csv from "csvtojson";
 import { viewsRepository } from "./viewsRepository";
 
-const USERS_TABLE = "users";
 const DEPT_TABLE = "dept_value";
-const date = new Date();
-const year = date.getFullYear();
-const month = String(date.getMonth() + 1).padStart(2, "0");
-const day = String(date.getDate()).padStart(2, "0");
-const now = `${year}${month}${day}`;
-const { getUsers, fetchDaily, createUser, loginAuth, getDeptValue } =
-  viewsRepository();
+
+const {
+  getUsers,
+  fetchDaily,
+  createUser,
+  loginAuth,
+  getDeptValue,
+  dataUpdate,
+  removeFavorite,
+} = viewsRepository();
 
 export const viewsFunction = () => {
   const graphData = async (req: Request, res: Response) => {
@@ -26,7 +25,6 @@ export const viewsFunction = () => {
 
     const sspanNum = Number(sspanStr || 0);
     const fspanNum = Number(fspanStr || 0);
-
     try {
       const selected = await fetchDaily(sspanNum, fspanNum, kinds, showmode);
       const map: Record<string, any> = {};
@@ -78,18 +76,13 @@ export const viewsFunction = () => {
 
   const upDateDeptValue = async (req: Request, res: Response) => {
     let result: any;
-    console.log("RRRRR", result, "REQQQQ", req.body);
     try {
       result = req.body.formData;
-      const compareData = await db(DEPT_TABLE).where(
-        "user_foreign_id",
-        result["user_foreign_id"],
-      );
-      console.log("コンオペデータ", compareData);
       if (!result) {
         return res.status(400).json({ error: "データが空です" });
       }
-      const insertData = await db(DEPT_TABLE).insert(result, ["*"]);
+      const insertData = await dataUpdate(result);
+      // const insertData = await db(DEPT_TABLE).insert(result, ["*"]);
       return res.status(200).json(insertData);
     } catch (err) {
       console.error("入力エラー", err);
@@ -131,7 +124,6 @@ export const viewsFunction = () => {
         solt: solt,
       };
       const insertData = await createUser(upDateData);
-      // const insertData = await db(USERS_TABLE).insert(upDateData, ["*"]);
       return res.status(200).json(insertData);
     } catch (err) {
       console.error("入力エラー", err);
@@ -142,7 +134,7 @@ export const viewsFunction = () => {
   const deleteFavorite = async (req: Request, res: Response) => {
     const id = req.body.dept_id;
     try {
-      const deleteData = await db(DEPT_TABLE).where("dept_id", id).del(["*"]);
+      const deleteData = await removeFavorite(id);
       return res.status(200).json(deleteData);
     } catch (err) {
       console.error("削除エラー", err);

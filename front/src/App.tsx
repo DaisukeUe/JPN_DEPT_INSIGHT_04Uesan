@@ -118,13 +118,11 @@ function App() {
         .then((res) => {
           setData(res.data);
           dispatch(setDataState(res.data));
-          console.log(res.data);
         });
     } catch (error) {
       console.error(error);
     } finally {
       setIsLoading(false);
-      console.log(formData);
     }
   };
 
@@ -136,7 +134,10 @@ function App() {
     const judge = window.confirm("お気に入りを登録しますか？");
     if (!judge) return;
     const idx = user[0] as any;
-
+    const findSame = dept.some(
+      (data) => (data as any).favorite === mainFavorite,
+    );
+    if (findSame) return alert("同じ名前のお気に入りは登録できません");
     axios
       .post(`${import.meta.env.VITE_API_URL}/deptvalue`, {
         formData: {
@@ -165,7 +166,6 @@ function App() {
         }
       })
       .catch(console.error);
-    console.log(dept);
   };
   const handleFavoriteNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
@@ -205,8 +205,6 @@ function App() {
         },
       })
       .then((res) => {
-        console.log(res.data);
-        console.log(dept);
         dispatch(setDeptInfo(res.data));
         setFavoriteData(res.data[0].show_save);
         setUserEffectControl(false);
@@ -214,17 +212,8 @@ function App() {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log(dept);
     const showSave = dept[0] as any;
-    console.log("effectcontrol", effectControl);
     if (effectControl === false) return;
-    console.log("動きます");
-    console.log(
-      showSave.kinds,
-      showSave.sspan,
-      showSave.fspan,
-      showSave.showmode,
-    );
     axios
       .get<DAILY_POINT[]>(`${import.meta.env.VITE_API_URL}/jgb-daily`, {
         params: {
@@ -258,6 +247,21 @@ function App() {
         return "国債　金利";
     }
   };
+  const getColor = (kinds: string) => {
+    switch (kinds) {
+      case "2yjpy.b":
+        return "#04a630";
+      case "5yjpy.b":
+        return "#f49209";
+      case "10yjpy.b":
+        return "#3B82F6";
+      case "30yjpy.b":
+        return "#f32c75";
+      default:
+        return "#000000";
+    }
+  };
+
   return (
     <div>
       <Navber />
@@ -322,7 +326,7 @@ function App() {
               <Line
                 type="monotone"
                 dataKey="selected"
-                stroke="#3B82F6"
+                stroke={getColor((data_body[0] as any).kinds)}
                 strokeWidth={2}
                 name={getKindName((data_body[0] as any)?.kinds)}
                 dot={false}

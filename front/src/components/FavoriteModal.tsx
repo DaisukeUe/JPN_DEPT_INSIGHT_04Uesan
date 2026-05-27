@@ -97,6 +97,10 @@ export const FavoriteModal = () => {
     const judge = window.confirm("お気に入りを登録しますか？");
     if (!judge) return;
     const idx = user[0] as any;
+    const findSame = dept.some(
+      (data) => (data as any).favorite === formData["favorite"],
+    );
+    if (findSame) return alert("同じ名前のお気に入りは登録できません");
     axios
       .post(`${import.meta.env.VITE_API_URL}/deptvalue`, {
         formData: formData,
@@ -118,7 +122,6 @@ export const FavoriteModal = () => {
         }
       })
       .catch(console.error);
-    console.log(dept);
   };
   useEffect(() => {
     const newValue = `${deptYear}${deptMonth}${deptDay}`;
@@ -137,7 +140,6 @@ export const FavoriteModal = () => {
 
   return (
     <div className="settings-panel">
-      {/* お気に入りの名前入力 */}
       <div className="form-group">
         <label className="form-label">お気に入りの名前</label>
         <input
@@ -148,7 +150,6 @@ export const FavoriteModal = () => {
         />
       </div>
 
-      {/* 種類選択 */}
       <div className="form-group">
         <label className="form-label">種類</label>
         <div className="select-wrapper">
@@ -170,7 +171,6 @@ export const FavoriteModal = () => {
         </div>
       </div>
 
-      {/* 開始日のトリオ */}
       <div className="form-group">
         <label className="form-label">開始日</label>
         <div className="date-select-grid">
@@ -215,7 +215,6 @@ export const FavoriteModal = () => {
         </div>
       </div>
 
-      {/* 終了日のトリオ */}
       <div className="form-group">
         <label className="form-label">終了日</label>
         <div className="date-select-grid">
@@ -260,7 +259,6 @@ export const FavoriteModal = () => {
         </div>
       </div>
 
-      {/* ラジオボタンエリア */}
       <div className="form-group">
         <label className="form-label">表示モード</label>
         <div className="radio-group">
@@ -280,7 +278,6 @@ export const FavoriteModal = () => {
         </div>
       </div>
 
-      {/* 登録ボタン */}
       <button className="btn-submit" onClick={handleFavoriteSaveButton}>
         お気に入りに登録する
       </button>

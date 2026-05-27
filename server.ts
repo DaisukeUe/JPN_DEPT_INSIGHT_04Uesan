@@ -1,10 +1,7 @@
 import cors from "cors";
-import axios from "axios";
-import csv from "csvtojson";
 import path from "path";
-import express, { Request, Response } from "express";
+import express from "express";
 import { viewsFunction } from "./view/views";
-import type { DAILY_ROW } from "./type_backend";
 
 const PORT = 3000;
 const app = express();
