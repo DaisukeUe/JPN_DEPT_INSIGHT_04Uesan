@@ -87,7 +87,10 @@ export const FavoriteModal = () => {
   };
 
   const handleFavoriteSaveButton = () => {
-    if (Number(formData["sspan"]) - Number(formData["fspan"]) >= 0) {
+    if (
+      Number(formData["fspan"]) !== parseInt(now) &&
+      Number(formData["sspan"]) - Number(formData["fspan"]) >= 0
+    ) {
       alert("開始日が終了日の後になっています");
       return;
     }

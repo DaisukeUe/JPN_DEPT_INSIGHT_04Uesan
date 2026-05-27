@@ -14,7 +14,7 @@ const year = date.getFullYear();
 const month = String(date.getMonth() + 1).padStart(2, "0");
 const day = String(date.getDate()).padStart(2, "0");
 const now = `${year}${month}${day}`;
-const { getUsers, fetchDaily } = viewsRepository();
+const { getUsers, fetchDaily, createUser, loginAuth } = viewsRepository();
 
 export const viewsFunction = () => {
   const graphData = async (req: Request, res: Response) => {
@@ -114,21 +114,9 @@ export const viewsFunction = () => {
     const password = req.body.password;
     console.log(password);
     try {
-      const solt = await db(USERS_TABLE).select("solt").where("user_id", id);
-      console.log(solt);
-      const soltPassword = `${solt[0].solt}${password}`;
-      console.log("RRr", soltPassword);
-      const dataBasePassword = await db(USERS_TABLE)
-        .select("password")
-        .where("user_id", id);
-      console.log(dataBasePassword);
-      const hash = crypto.createHash("sha256");
-      const hashPassword = hash.update(soltPassword).digest("hex");
-      console.log(hashPassword);
-      if (`${dataBasePassword[0].password}` === `${hashPassword}`) {
-        console.log("aaaaa");
-        const userData = await db(USERS_TABLE).where("user_id", id);
-        console.log(userData);
+      const userData = await loginAuth(id, password);
+      console.log(userData);
+      if (userData?.length !== 0) {
         res.status(200).json(userData);
       } else {
         res.status(203).json({ data: "パスワードが違います" });
@@ -154,7 +142,8 @@ export const viewsFunction = () => {
         password: hashPassword,
         solt: solt,
       };
-      const insertData = await db(USERS_TABLE).insert(upDateData, ["*"]);
+      const insertData = await createUser(upDateData);
+      // const insertData = await db(USERS_TABLE).insert(upDateData, ["*"]);
       return res.status(200).json(insertData);
     } catch (err) {
       console.error("入力エラー", err);

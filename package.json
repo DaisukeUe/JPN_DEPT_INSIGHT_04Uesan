@@ -8,6 +8,7 @@
     "dev": "nodemon server.ts",
     "build": "cd front && npm install && npm run build && rm -rf ../public && cp -r dist ../public",
     "test": "mocha --require ts-node/register --global-teardown test/setup.ts 'test/**/*.test.ts' --exit",
+    "test:doubles": "TS_NODE_PROJECT=tsconfig.test.json mocha --require ts-node/register --global-teardown test/setup.ts test-double/**/*.double.test.ts",
     "db:migrate": "npx knex migrate:latest",
     "db:migrate-make": "npx knex migrate:make --knexfile ./knexfile.ts",
     "db:seed": "npx knex seed:run --knexfile ./knexfile.ts",
@@ -36,16 +37,20 @@
     "ws": "^8.20.1"
   },
   "devDependencies": {
-    "@types/chai": "^5.2.3",
+    "@types/chai": "^4.3.20",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/knex": "^0.15.2",
     "@types/mocha": "^10.0.10",
     "@types/node": "^25.9.1",
-    "chai": "^6.2.2",
+    "@types/sinon": "^21.0.1",
+    "@types/sinon-chai": "^4.0.0",
+    "chai": "^4.5.0",
     "chai-as-promised": "^8.0.2",
     "mocha": "^11.7.6",
     "nodemon": "^3.1.14",
+    "sinon": "^22.0.0",
+    "sinon-chai": "^4.0.1",
     "typescript": "^6.0.3"
   }
 }

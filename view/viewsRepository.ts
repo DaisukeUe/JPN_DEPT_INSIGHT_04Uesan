@@ -12,6 +12,24 @@ export const viewsRepository = () => {
     return await db(USERS_TABLE).select();
   };
 
+  const createUser = async (upDateData: any): Promise<USER[]> => {
+    return await db(USERS_TABLE).insert(upDateData, ["*"]);
+  };
+
+  const loginAuth = async (id: number, password: string): Promise<USER[]> => {
+    const solt = await db(USERS_TABLE).select("solt").where("user_id", id);
+    const soltPassword = `${solt[0].solt}${password}`;
+    const dataBasePassword = await db(USERS_TABLE)
+      .select("password")
+      .where("user_id", id);
+    const hash = crypto.createHash("sha256");
+    const hashPassword = hash.update(soltPassword).digest("hex");
+    if (`${dataBasePassword[0].password}` === `${hashPassword}`) {
+      return await db(USERS_TABLE).where("user_id", id);
+    }
+    return [];
+  };
+
   const fetchDaily = async (
     sSpan: number,
     fSpan: Number,
@@ -27,5 +45,7 @@ export const viewsRepository = () => {
   return {
     getUsers,
     fetchDaily,
+    createUser,
+    loginAuth,
   };
 };
