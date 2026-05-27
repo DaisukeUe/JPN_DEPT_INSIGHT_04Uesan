@@ -91,6 +91,8 @@ export const FavoriteModal = () => {
       alert("開始日が終了日の後になっています");
       return;
     }
+    const judge = window.confirm("お気に入りを登録しますか？");
+    if (!judge) return;
     const idx = user[0] as any;
     axios
       .post(`${import.meta.env.VITE_API_URL}/deptvalue`, {

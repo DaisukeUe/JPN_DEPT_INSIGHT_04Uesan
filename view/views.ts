@@ -5,6 +5,7 @@ import { Response, Request } from "express";
 import { DAILY_ROW } from "../type_backend";
 import axios from "axios";
 import csv from "csvtojson";
+import { viewsRepository } from "./viewsRepository";
 
 const USERS_TABLE = "users";
 const DEPT_TABLE = "dept_value";
@@ -13,20 +14,9 @@ const year = date.getFullYear();
 const month = String(date.getMonth() + 1).padStart(2, "0");
 const day = String(date.getDate()).padStart(2, "0");
 const now = `${year}${month}${day}`;
+const { getUsers, fetchDaily } = viewsRepository();
 
 export const viewsFunction = () => {
-  async function fetchDaily(
-    sSpan: number,
-    fSpan: Number,
-    kinds: string,
-    showMode: string,
-  ): Promise<DAILY_ROW[]> {
-    const url = `https://stooq.com/q/d/l/?s=${kinds}&f=${sSpan}&t=${fSpan}&i=${showMode}&apikey=udu8gyS2pTVcXsD9U1ONl3jtFJbvahfC`;
-    const res = await axios.get(url);
-    const json = await csv().fromString(res.data);
-    return json;
-  }
-
   const graphData = async (req: Request, res: Response) => {
     const kinds = req.query["formData[kinds]"] as string;
     const sspanStr = req.query["formData[sspan]"] as string;
@@ -62,7 +52,7 @@ export const viewsFunction = () => {
   const usersView = async (req: Request, res: Response) => {
     let result: USER[] = [];
     try {
-      result = await db(USERS_TABLE);
+      result = await getUsers();
       res.status(200);
       res.json(result);
     } catch (err) {
