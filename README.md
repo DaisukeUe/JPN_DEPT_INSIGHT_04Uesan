@@ -60,3 +60,94 @@
 デプロイ
 
     -renderサイト. https://btc-fullstack-uesan-01.onrender.com
+
+#
+
+ディレクトリ構成
+
+├── backup
+│ ├── \_knex.js
+│ ├── \_knexfile.js
+│ ├── 001_user.js
+│ ├── 20260521084601_create_user_table.js
+│ ├── 20260521084654_create_dept_table.js
+│ └── backap.tsx
+├── db
+│ └── data
+│ ├── migrations
+│ │ ├── 20260522064403_create_users_table.ts
+│ │ ├── 20260522064421_create_dept_table.ts
+│ │ └── 20260525060732_solt_update_length**users.ts
+│ └── seeds
+│ ├── 001_users.ts
+│ └── 002_dept.ts
+├── front
+│ ├── eslint.config.js
+│ ├── index.html
+│ ├── package-lock.json
+│ ├── package.json
+│ ├── public
+│ │ ├── favicon.svg
+│ │ └── icons.svg
+│ ├── README.md
+│ ├── setupTests.ts
+│ ├── src
+│ │ ├── **tests\_\_
+│ │ │ └── login.test.tsx
+│ │ ├── App.css
+│ │ ├── App.tsx
+│ │ ├── assets
+│ │ │ ├── hero.png
+│ │ │ ├── react.svg
+│ │ │ └── vite.svg
+│ │ ├── components
+│ │ │ ├── favoriteModal.css
+│ │ │ ├── FavoriteModal.tsx
+│ │ │ ├── indicator.css
+│ │ │ ├── login.css
+│ │ │ ├── Login.tsx
+│ │ │ ├── navbar.css
+│ │ │ ├── Navber.tsx
+│ │ │ ├── showFavoriteChange.css
+│ │ │ ├── ShowFavoriteChange.tsx
+│ │ │ └── SignUp.tsx
+│ │ ├── index.css
+│ │ ├── main.tsx
+│ │ ├── Roots.tsx
+│ │ ├── slices
+│ │ │ ├── dataSlice.ts
+│ │ │ ├── deptSlice.ts
+│ │ │ ├── loginSlice.ts
+│ │ │ └── userSlice.ts
+│ │ ├── store.ts
+│ │ └── type.ts
+│ ├── tsconfig.app.json
+│ ├── tsconfig.json
+│ ├── tsconfig.node.json
+│ ├── vite.config.test.ts
+│ └── vite.config.ts
+├── knex.ts
+├── knexfile.ts
+├── package-lock.json
+├── package.json
+├── public
+│ ├── assets
+│ │ ├── index-B-HSuN3k.css
+│ │ └── index-DVab1NFK.js
+│ ├── favicon.svg
+│ ├── icons.svg
+│ └── index.html
+├── README.md
+├── server.ts
+├── test
+│ ├── setup.ts
+│ └── views.test.ts
+├── test-double
+│ └── views.double.test.ts
+├── tsconfig.json
+├── tsconfig.test.json
+├── type_backend.ts
+├── view
+│ ├── views.ts
+│ └── viewsRepository.ts
+└── スクリーンショット 2026-05-26 21.57.27.png
