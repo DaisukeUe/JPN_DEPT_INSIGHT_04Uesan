@@ -54,7 +54,7 @@ const SignUp = () => {
 
           <form onSubmit={handleSubmit} className="login-form">
             <div className="input-group">
-              <label className="input-label">ユーザーネーム</label>
+              <label className="input-label">登録するユーザーネーム</label>
               <input
                 type="text"
                 placeholder="ユーザー名を入力"

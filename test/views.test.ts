@@ -15,8 +15,14 @@ describe("views", () => {
       .then(() => db.seed.run())
       .catch(console.error);
   });
-  const { getUsers, fetchDaily, createUser, loginAuth, getDeptValue } =
-    viewsRepository();
+  const {
+    getUsers,
+    fetchDaily,
+    createUser,
+    loginAuth,
+    getDeptValue,
+    removeFavorite,
+  } = viewsRepository();
 
   describe("userList", () => {
     it("should return array of users", async () => {
@@ -65,9 +71,19 @@ describe("views", () => {
   });
 
   describe("getDeptValue", () => {
-    it("should return userDeptValu", async () => {
+    it("should return array of deptData", async () => {
       const result = await getDeptValue(2);
       expect(result).to.be.an("array");
+    });
+    it("should have expected props", async () => {
+      const result = await getDeptValue(2);
+      expect(result[0] as any).to.have.property("dept_id");
+      expect(result[0] as any).to.have.property("user_foreign_id");
+      expect(result[0] as any).to.have.property("favorite");
+      expect(result[0] as any).to.have.property("kinds");
+      expect(result[0] as any).to.have.property("sspan");
+      expect(result[0] as any).to.have.property("fspan");
+      expect(result[0] as any).to.have.property("showmode");
     });
   });
 
@@ -75,6 +91,22 @@ describe("views", () => {
     it("shold return array of graphData", async () => {
       const data_body = await fetchDaily(20210101, 20220101, "10yjpy.b", "d");
       expect(data_body).to.be.an("array");
+    });
+    it("should have expected props", async () => {
+      const data_body = await fetchDaily(20210101, 20220101, "10yjpy.b", "d");
+      expect(data_body[0] as any).to.have.property("Date");
+      expect(data_body[0] as any).to.have.property("Open");
+      expect(data_body[0] as any).to.have.property("High");
+      expect(data_body[0] as any).to.have.property("Low");
+      expect(data_body[0] as any).to.have.property("Close");
+    });
+  });
+
+  describe("delete", () => {
+    it("should return deleteData", async () => {
+      const result = await removeFavorite(3);
+      console.log(result);
+      expect(result).to.be.an("array");
     });
   });
 });

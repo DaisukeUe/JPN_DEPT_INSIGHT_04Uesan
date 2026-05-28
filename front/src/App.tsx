@@ -326,7 +326,7 @@ function App() {
               <Line
                 type="monotone"
                 dataKey="selected"
-                stroke={getColor((data_body[0] as any).kinds)}
+                stroke={getColor((data_body[0] as any)?.kinds)}
                 strokeWidth={2}
                 name={getKindName((data_body[0] as any)?.kinds)}
                 dot={false}

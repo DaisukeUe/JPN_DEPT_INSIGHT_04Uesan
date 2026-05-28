@@ -93,7 +93,6 @@ export const viewsFunction = () => {
   const loginUser = async (req: Request, res: Response) => {
     const id = req.body.user_id;
     const password = req.body.password;
-    console.log(password);
     try {
       const userData = await loginAuth(id, password);
       console.log(userData);
@@ -115,7 +114,6 @@ export const viewsFunction = () => {
     const soltPassword = `${solt}${passWord}`;
     const hash = crypto.createHash("sha256");
     const hashPassword = hash.update(soltPassword).digest("hex");
-    console.log(hashPassword);
     if (userName === undefined) return;
     try {
       const upDateData = {
