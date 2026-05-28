@@ -466,7 +466,9 @@ function App() {
               </div>
 
               <div className="form-group">
-                <label className="form-label">終了日</label>
+                <label className="form-label">
+                  終了日　（現在を選ぶと常に最新になります）
+                </label>
                 <div className="date-select-grid">
                   <select
                     className="form-select"
@@ -482,6 +484,7 @@ function App() {
                         {year}年
                       </option>
                     ))}
+                    <option value={year}>現在{year}年</option>
                   </select>
                   <select
                     className="form-select"
@@ -496,6 +499,7 @@ function App() {
                         </option>
                       ),
                     )}
+                    <option value={month}>現在{month}月</option>
                   </select>
                   <select
                     className="form-select"
@@ -508,6 +512,7 @@ function App() {
                         {day}日
                       </option>
                     ))}
+                    <option value={day}>現在{day}日</option>
                   </select>
                 </div>
               </div>
