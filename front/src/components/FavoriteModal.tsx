@@ -231,6 +231,7 @@ export const FavoriteModal = () => {
                 </option>
               ),
             )}
+            <option value={year}>現在{year}年</option>
           </select>
           <select
             className="form-select"
@@ -243,6 +244,7 @@ export const FavoriteModal = () => {
                 {month}月
               </option>
             ))}
+            <option value={month}>現在{month}月</option>
           </select>
           <select
             className="form-select"
@@ -255,6 +257,7 @@ export const FavoriteModal = () => {
                 {day}日
               </option>
             ))}
+            <option value={day}>現在{day}月</option>
           </select>
         </div>
       </div>
