@@ -96,20 +96,17 @@ export const ShowFavoriteChange = () => {
           >
             <option value={""}>お気に入りを選択...</option>
             {dept.map((dep: any, index: any) => {
-              // 「2yjpy.b」などの無骨な識別子を綺麗にトリミングまたは表示を整える
               const cleanKind =
                 dep.kinds?.replace(".b", "").toUpperCase() || "";
 
               return (
                 <option key={index} value={dep.favorite}>
-                  {/* 全角スペースを区切り文字「 | 」に変更して視認性をアップ */}
                   {`${dep.favorite} [${cleanKind} | ${dep.sspan}〜${dep.fspan} | ${dep.showmode}]`}
                 </option>
               );
             })}
           </select>
         </div>
-        {/* 削除ボタン */}
         <IconButton
           aria-label="delete"
           color="error"
